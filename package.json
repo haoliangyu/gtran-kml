@@ -1,0 +1,33 @@
+{
+  "name": "gtran-kml",
+  "version": "1.0.0",
+  "description": "convert geojson to kml file and backwards",
+  "main": "src/script.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haoliangyu/gtran-kml.git"
+  },
+  "keywords": [
+    "geojson",
+    "kml"
+  ],
+  "author": "Haoliang Yu <haholiang.yu@outlook.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/haoliangyu/gtran-kml/issues"
+  },
+  "homepage": "https://github.com/haoliangyu/gtran-kml#readme",
+  "dependencies": {
+    "elementtree": "^0.1.6",
+    "tokml": "^0.3.0"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "log4js": "^0.6.27",
+    "mocha": "^2.3.3",
+    "q": "^1.4.1"
+  }
+}
