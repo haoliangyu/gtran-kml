@@ -5,11 +5,11 @@ var logger = require('log4js').getLogger();
 var chai = require('chai');
 var expect = chai.expect;
 
-describe('KML module', function() {
+describe('KML module - Point', function() {
 
-    var saveName = 'test/result/test.kml';
+    var saveName = 'test/result/test_point.kml';
 
-    var kmlData = 'test/data/test.kml';
+    var kmlData = 'test/data/test_point.kml';
 
     var pointSymbol = {
         color: '#2dcd86',
@@ -42,7 +42,7 @@ describe('KML module', function() {
         });
     });
 
-    it('should load the kml file and convert it into a geojson.', function() {
+    it('should load the point kml file and convert it into a geojson.', function() {
         gtran.toGeoJson(kmlData).then(function(geojson) {
             // Get features
             expect(geojson.features.length).to.be.equal(4);

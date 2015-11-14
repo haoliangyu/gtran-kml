@@ -16,9 +16,10 @@ exports.addTo = function(kmlContent, geomType, symbol) {
             var geomStyle = et.SubElement(style, 'PolyStyle');
             addPolygonSymbol(geomStyle, symbol);
             break;
-        case 'Polyline':
-            var geomStyle = et.SubElement(style, 'LineString');
+        case 'LineString':
+            var geomStyle = et.SubElement(style, 'LineStyle');
             addLineStringSymbol(geomStyle, symbol);
+            break;
         default:
             throw new Error('Geometry type unsupported.');
     }

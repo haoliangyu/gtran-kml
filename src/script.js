@@ -61,7 +61,7 @@ exports.fromGeoJson = function(geojson, fileName, options) {
                 }
                 feature.kmlDescription = description;
             }
-
+            
             var kmlContent = tokml(kmlGeoJson, {
                 name: 'name',
                 description: 'kmlDescription'
@@ -101,9 +101,8 @@ function getGeomType(geojson) {
     switch(geojson.features[0].geometry.type) {
         case 'Point':
         case 'Polygon':
+        case 'LineString':
             return geojson.features[0].geometry.type;
-        case 'Polyline':
-            return 'LineString';
         default:
             throw new Error('Geometry type unsupported.');
     }
@@ -112,12 +111,12 @@ function getGeomType(geojson) {
 function getGeometry(placemark) {
     var geomTag = placemark.find('./Point');
     if(geomTag) {
-        return createGeometry('POINT', geomTag.findtext('./coordinates'));
+        return createGeometry('Point', geomTag.findtext('./coordinates'));
     }
 
     geomTag = placemark.find('./LineString');
     if(geomTag) {
-        return createGeometry('POLYLINE', geomTag.findtext('./coordinates'));
+        return createGeometry('LineString', geomTag.findtext('./coordinates'));
     }
 
     geomTag = placemark.find('./Polygon');
@@ -129,7 +128,7 @@ function getGeometry(placemark) {
             inRingsCoors.push(node.text);
         });
 
-        return createGeometry('POLYGON', outRingCoors, inRingsCoors);
+        return createGeometry('Polygon', outRingCoors, inRingsCoors);
     }
 }
 
