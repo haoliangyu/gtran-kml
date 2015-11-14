@@ -1,6 +1,7 @@
 'use strict';
 
 var promiseLib = require("./promise.js");
+var symbol = require('./symbol.js');
 var tokml = require('tokml');
 var fs = require('fs');
 var et = require('elementtree');
@@ -66,6 +67,13 @@ exports.fromGeoJson = function(geojson, fileName, options) {
                 description: 'kmlDescription'
             });
 
+            if(options) {
+                if('symbol' in options) {
+                    var geomType = getGeomType(kmlGeoJson);
+                    kmlContent = symbol.addTo(kmlContent, geomType, options.symbol);
+                }
+            }
+
             if(fileName) {
                 var fileNameWithExt = fileName;
                 if(fileNameWithExt.indexOf('.kml') === -1) {
@@ -87,6 +95,19 @@ exports.fromGeoJson = function(geojson, fileName, options) {
 
     return promise;
 };
+
+function getGeomType(geojson) {
+    // Assume there is only one geometry type in the geojson
+    switch(geojson.features[0].geometry.type) {
+        case 'Point':
+        case 'Polygon':
+            return geojson.features[0].geometry.type;
+        case 'Polyline':
+            return 'LineString';
+        default:
+            throw new Error('Geometry type unsupported.');
+    }
+}
 
 function getGeometry(placemark) {
     var geomTag = placemark.find('./Point');
@@ -202,23 +223,6 @@ function getProperties(placemark, schemas) {
     });
 
     return properties;
-}
-
-function convert(value, toType) {
-    switch(toType) {
-        case 'int':
-        case 'uint':
-        case 'short':
-        case 'ushort':
-            return parseInt(value);
-        case 'float':
-        case 'double':
-            return parseFloat(value);
-        case 'bool':
-            return value.toLowerCase() === 'true';
-        default:
-            return value;
-    };
 }
 
 function setPromiseLib(lib) {

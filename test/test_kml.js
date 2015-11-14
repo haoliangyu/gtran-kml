@@ -11,6 +11,13 @@ describe('KML module', function() {
 
     var kmlData = 'test/data/test.kml';
 
+    var pointSymbol = {
+        color: '#2dcd86',
+        alpha: 255,
+        scale: 1,
+        icon: 'http://maps.google.com/mapfiles/kml/shapes/square.png'
+    };
+
     var geojson = {
         'type': 'FeatureCollection',
         'features': [{
@@ -23,12 +30,12 @@ describe('KML module', function() {
         }]
     };
 
-    it('should save the geojson as a KML file with Q.', function() {
+    it('should save the point geojson as a KML file with Q.', function() {
         gtran.setPromiseLib(require('q'));
-        gtran.fromGeoJson(geojson, saveName).then(function(file) {
-            expect(file).to.be.equal(saveName);
-
-            // if(fs.statSync(saveName)) { fs.unlinkSync(saveName); }
+        gtran.fromGeoJson(geojson, saveName, {
+            symbol: pointSymbol
+        }).then(function(file) {
+            expect(fs.statSync(saveName)).to.exist;
         })
         .catch(function(err) {
             logger.error(err);
