@@ -14,7 +14,7 @@ npm install gtran-kml
 
 * **setPromiseLib(object)**
 
-    Specify the promise library. If not, the library will save the native Promise.
+    Specify the promise library. If not, the library will use the native Promise.
 
 * **fromGeoJson(geojson, fileName, options)**
 
