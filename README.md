@@ -28,7 +28,7 @@ npm install gtran-kml
 
             * color     - HTML color code or array of RGB values, indicating feature color.
 
-            * alpha     - An integer value (0-.255), indicating the color opacity
+            * alpha     - An integer value (0-255), indicating the color opacity
 
             * scale     - Feature size, a float number.
 
@@ -38,7 +38,7 @@ npm install gtran-kml
 
             * color     - HTML color code or array of RGB values, indicating feature color.
 
-            * alpha     - An integer value (0-.255), indicating the color opacity
+            * alpha     - An integer value (0-255), indicating the color opacity
 
             * width     - A float value, indicating line width.
 
@@ -46,7 +46,7 @@ npm install gtran-kml
 
             * color     - HTML color code or array of RGB values, indicating feature color.
 
-            * alpha     - An integer value (0-.255), indicating the color opacity
+            * alpha     - An integer value (0-255), indicating the color opacity
 
             * fill      - A boolean value, indicating whether to fill the polygon.
 
