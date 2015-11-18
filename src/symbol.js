@@ -97,16 +97,22 @@ function toKmlColor(symbol) {
                         symbol.color.substr(3, 2) +
                         symbol.color.substr(1, 2);
             break;
-        case 'array':
-            var color = symbol.color[2].toString(16) +
-                        symbol.color[1].toString(16) +
-                        symbol.color[0].toString(16);
+        case 'object':
+            var color = getFullHexagonValue(symbol.color[2]) +
+                        getFullHexagonValue(symbol.color[1]) +
+                        getFullHexagonValue(symbol.color[0]);
+
             break;
         default:
             throw new Error('Given color is invalid.');
     }
 
-    color = 'alpha' in symbol ? symbol.alpha.toString(16) : 'ff' + color;
+    color = 'alpha' in symbol ? symbol.alpha.toString(16) + color : 'ff' + color;
 
     return color;
+}
+
+function getFullHexagonValue(integer) {
+  var str = integer.toString(16);
+  return str.length < 2 ? '0' + str : str;
 }

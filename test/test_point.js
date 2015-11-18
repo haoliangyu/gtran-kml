@@ -12,7 +12,7 @@ describe('KML module - Point', function() {
     var kmlData = 'test/data/test_point.kml';
 
     var pointSymbol = {
-        color: '#2dcd86',
+        color: [255, 0, 0],
         alpha: 255,
         scale: 1,
         icon: 'http://maps.google.com/mapfiles/kml/shapes/square.png'
