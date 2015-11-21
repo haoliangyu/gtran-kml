@@ -64,16 +64,16 @@ npm install gtran-kml
 
 var kml = require('gtran-kml');
 
-# Specify promise library if necessary
+// Specify promise library if necessary
 kml.setPromiseLib(require('bluebird'));
 
-# Read KML file
+// Read KML file
 kml.toGeoJson('source.kml')
 .then(function(object) {
     var geojson = object;
 });
 
-# Define feature symbol
+// Define feature symbol
 var pointSymbol = {
     color: '#2dcd86',
     alpha: 255,
@@ -81,7 +81,7 @@ var pointSymbol = {
     icon: 'http://maps.google.com/mapfiles/kml/shapes/square.png'
 };
 
-# Save geojson into KML file
+// Save geojson into KML file
 kml.fromGeoJson(geojson, 'point.kml', {
     symbol: pointSymbol
 })
