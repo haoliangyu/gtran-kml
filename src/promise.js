@@ -2,10 +2,10 @@
 
 var promiseLib;
 
-exports.set = function(promiseLib) {
+exports.set = function(lib) {
 
-    if (promiseLib) {
-        promiseLib = parsePromiseLib(promiseLib);
+    if (lib) {
+        promiseLib = parsePromiseLib(lib);
     } else {
         // if not ES6, native Promise is not support
         if (typeof(Promise) === 'undefined') {
