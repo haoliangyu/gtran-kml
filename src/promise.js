@@ -22,7 +22,7 @@ exports.promisify = function(func) {
 
     return function () {
         var args = Array.prototype.slice.call(arguments);
-        return new Promise(function (resolve, reject) {
+        return new promiseLib(function (resolve, reject) {
             args.push(function (err, res) {
                 if (err) { reject(err); }
                 else { resolve(res); }
