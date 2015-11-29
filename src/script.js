@@ -61,17 +61,15 @@ exports.fromGeoJson = function(geojson, fileName, options) {
                 }
                 feature.kmlDescription = description;
             }
-            
+
             var kmlContent = tokml(kmlGeoJson, {
-                name: 'name',
+                name: options && 'name' in options ? options.name : 'name',
                 description: 'kmlDescription'
             });
 
-            if(options) {
-                if('symbol' in options) {
-                    var geomType = getGeomType(kmlGeoJson);
-                    kmlContent = symbol.addTo(kmlContent, geomType, options.symbol);
-                }
+            if(options && 'symbol' in options) {
+                var geomType = getGeomType(kmlGeoJson);
+                kmlContent = symbol.addTo(kmlContent, geomType, options.symbol);
             }
 
             if(fileName) {

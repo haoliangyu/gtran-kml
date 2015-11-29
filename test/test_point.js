@@ -25,7 +25,7 @@ describe('KML module - Point', function() {
             'geometry': {"type":"Point","coordinates":[-70.2532459795475,43.6399758607149]},
             'properties': {
               'id': 1,
-              'name': 'test'
+              'Name': 'test'
             }
         }]
     };
@@ -33,7 +33,8 @@ describe('KML module - Point', function() {
     it('should save the point geojson as a KML file with Q.', function() {
         gtran.setPromiseLib(require('q'));
         gtran.fromGeoJson(geojson, saveName, {
-            symbol: pointSymbol
+            symbol: pointSymbol,
+            name: 'Name'
         }).then(function(file) {
             expect(fs.statSync(saveName)).to.exist;
         })

@@ -22,7 +22,9 @@ npm install gtran-kml
 
     options:
 
-    * symbol - Symbol of saved features. Supported styles:
+    * name      - Specify the feature name using a geojson property. The Default value is **'name'**.
+
+    * symbol    - Symbol of saved features. Supported styles:
 
         * Point
 
@@ -73,6 +75,18 @@ kml.toGeoJson('source.kml')
     var geojson = object;
 });
 
+var geojson = {
+    'type': 'FeatureCollection',
+    'features': [{
+        'type': 'Feature',
+        'geometry': {"type":"Point","coordinates":[-70.2532459795475,43.6399758607149]},
+        'properties': {
+          'id': 1,
+          'Name': 'test'
+        }
+    }]
+};
+
 // Define feature symbol
 var pointSymbol = {
     color: '#2dcd86',
@@ -83,7 +97,8 @@ var pointSymbol = {
 
 // Save geojson into KML file
 kml.fromGeoJson(geojson, 'point.kml', {
-    symbol: pointSymbol
+    symbol: pointSymbol,
+    name: 'Name'
 })
 .then(function(fileName) {
     console.log('KML file has been saved at:' + fileName);
