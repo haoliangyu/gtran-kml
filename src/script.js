@@ -222,6 +222,23 @@ function getProperties(placemark, schemas) {
     return properties;
 }
 
+function convert(value, toType) {
+    switch(toType) {
+        case 'int':
+        case 'uint':
+        case 'short':
+        case 'ushort':
+            return parseInt(value);
+        case 'float':
+        case 'double':
+            return parseFloat(value);
+        case 'bool':
+            return value.toLowerCase() === 'true';
+        default:
+            return value;
+    };
+}
+
 function setPromiseLib(lib) {
     Promise = promiseLib.set(lib);
     readFile = promiseLib.promisify(fs.readFile);
