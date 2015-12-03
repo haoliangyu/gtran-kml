@@ -53,18 +53,8 @@ exports.fromGeoJson = function(geojson, fileName, options) {
     var promise = new Promise(function(resolve, reject) {
         try {
             var kmlGeoJson = JSON.parse(JSON.stringify(geojson));
-
-            for(var feature in kmlGeoJson.feature) {
-                var description = '';
-                for(var key in feature.properties) {
-                    description += key + '=' + feature.properties[key] + '\n';
-                }
-                feature.kmlDescription = description;
-            }
-
             var kmlContent = tokml(kmlGeoJson, {
-                name: options && 'name' in options ? options.name : 'name',
-                description: 'kmlDescription'
+                name: options && 'name' in options ? options.name : 'name'
             });
 
             if(options && 'symbol' in options) {

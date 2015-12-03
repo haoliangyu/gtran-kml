@@ -25,6 +25,7 @@ describe('KML module - Point', function() {
             'geometry': {"type":"Point","coordinates":[-70.2532459795475,43.6399758607149]},
             'properties': {
               'id': 1,
+              'sdf': null,
               'Name': 'test'
             }
         }]
