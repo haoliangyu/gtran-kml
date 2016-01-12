@@ -7,21 +7,23 @@ exports.addTo = function(kmlContent, geomType, symbol) {
     var style = et.SubElement(kml.find('Document'), 'Style');
     style.attrib.id = 'kml_symbol';
 
-    switch (geomType) {
-        case 'Point':
-            var geomStyle = et.SubElement(style, 'IconStyle');
-            addPointSymbol(geomStyle, symbol);
-            break;
-        case 'Polygon':
-            var geomStyle = et.SubElement(style, 'PolyStyle');
-            addPolygonSymbol(geomStyle, symbol);
-            break;
-        case 'LineString':
-            var geomStyle = et.SubElement(style, 'LineStyle');
-            addLineStringSymbol(geomStyle, symbol);
-            break;
-        default:
-            throw new Error('Geometry type unsupported.');
+    if(symbol) {
+        switch (geomType) {
+            case 'Point':
+                var geomStyle = et.SubElement(style, 'IconStyle');
+                addPointSymbol(geomStyle, symbol);
+                break;
+            case 'Polygon':
+                var geomStyle = et.SubElement(style, 'PolyStyle');
+                addPolygonSymbol(geomStyle, symbol);
+                break;
+            case 'LineString':
+                var geomStyle = et.SubElement(style, 'LineStyle');
+                addLineStringSymbol(geomStyle, symbol);
+                break;
+            default:
+                throw new Error('Geometry type unsupported.');
+        }
     }
 
     kml.findall('.//Placemark').forEach(function(place) {
