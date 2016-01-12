@@ -4,10 +4,10 @@ exports.addTo = function(kmlContent, geomType, symbol) {
     var kml = et.parse(kmlContent);
 
     // Add symbol style
-    var style = et.SubElement(kml.find('Document'), 'Style');
-    style.attrib.id = 'kml_symbol';
-
     if(symbol) {
+        var style = et.SubElement(kml.find('Document'), 'Style');
+        style.attrib.id = 'kml_symbol';
+
         switch (geomType) {
             case 'Point':
                 var geomStyle = et.SubElement(style, 'IconStyle');
