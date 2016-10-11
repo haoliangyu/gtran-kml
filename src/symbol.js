@@ -90,10 +90,10 @@ function addLineStringSymbol(styleNode, symbol) {
 function toKmlColor(symbol) {
     switch (typeof symbol.color) {
         case 'string':
-            if (symbol.color === 4) {
-                symbol.color.splice(1, 0, '0');
-                symbol.color.splice(2, 0, '0');
-                symbol.color.splice(3, 0, '0');
+            if (symbol.color.length === 4) {
+                symbol.color = symbol.color.slice(0, 1) + "0" + symbol.color.slice(1);
+                symbol.color = symbol.color.slice(0, 3) + "0" + symbol.color.slice(2);
+                symbol.color = symbol.color.slice(0, 5) + "0" + symbol.color.slice(3);
             }
             var color = symbol.color.substr(5, 2) +
                         symbol.color.substr(3, 2) +

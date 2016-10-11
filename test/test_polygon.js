@@ -12,7 +12,7 @@ describe('KML module - Polygon', function() {
     var kmlData = 'test/data/test_polygon.kml';
 
     var polygonSymbol = {
-        color: '#2dcd86',
+        color: '#fff',
         fill: true,
         outline: false
     };
