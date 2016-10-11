@@ -20,6 +20,8 @@ npm install gtran-kml
 
     Save the geojson into the given file name.
 
+    Since **1.1.11**, it also supports Mapbox's [simplestyle-spec](https://github.com/mapbox/simplestyle-spec).
+
     options:
 
     * name      - Specify the feature name using a geojson property. The Default value is **'name'**.
