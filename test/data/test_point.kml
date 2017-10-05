@@ -162,7 +162,7 @@
 		<Placemark>
 			<name>Polygon</name>
 			<ExtendedData>
-				<SchemaData schemaURl="#headerTypeId">
+				<SchemaData schemaUrl="#headerTypeId">
 					<SimpleData name="id">1</SimpleData>
 				</SchemaData>
 			</ExtendedData>

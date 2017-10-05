@@ -195,7 +195,7 @@ function getProperties(placemark, schemas) {
     if(schemas) {
         var schemaDatasets = placemark.findall('./ExtendedData/SchemaData');
         schemaDatasets.forEach(function(schemaDataset) {
-            var schema = schemas[schemaDataset.attrib.schemaURl.replace('#', '')],
+            var schema = schemas[schemaDataset.attrib.schemaUrl.replace('#', '')],
                 fields = schemaDataset.findall('./SimpleData');
             fields.forEach(function(field) {
                 properties[field.attrib.name] = convert(field.text, schema[field.attrib.name]);
