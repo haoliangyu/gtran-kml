@@ -1,5 +1,7 @@
 # gtran-kml
 
+[![Build Status](https://travis-ci.org/haoliangyu/gtran-kml.svg?branch=master)](https://travis-ci.org/haoliangyu/gtran-kml)
+
 Convert geojson to kml file and backwards.
 
 This is a sub-project of [gtran](https://github.com/haoliangyu/gtran).
