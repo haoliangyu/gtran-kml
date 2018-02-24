@@ -1,14 +1,13 @@
-var gtran = require("../src/script.js");
-var fs = require("fs");
-var logger = require("log4js").getLogger();
+const gtran = require("../src");
+const fs = require("fs");
 
-var chai = require("chai");
-var expect = chai.expect;
+const chai = require("chai");
+const expect = chai.expect;
 
 describe("KML module - Point", function() {
-  var saveName = "test/result/test_point.kml";
-
-  var kmlData = "test/data/test_point.kml";
+  const saveName = "test/result/test_point.kml";
+  const saveNameSymbol = "test/result/test_point_symbol.kml";
+  const kmlData = "test/data/test_point.kml";
 
   var pointSymbol = {
     color: [255, 0, 0],
@@ -35,8 +34,7 @@ describe("KML module - Point", function() {
     ]
   };
 
-  it("should save the point geojson as a KML file with Q.", function() {
-    gtran.setPromiseLib(require("q"));
+  it("should save the point geojson as a KML file.", done => {
     gtran
       .fromGeoJson(geojson, saveName, {
         symbol: pointSymbol,
@@ -44,13 +42,25 @@ describe("KML module - Point", function() {
       })
       .then(function(file) {
         expect(fs.statSync(saveName)).to.exist;
+        done();
       })
-      .catch(function(err) {
-        logger.error(err);
-      });
+      .catch(done);
   });
 
-  it("should load the point kml file and convert it into a geojson.", function() {
+  it("should save the point geojson as a KML file with conditional symbols.", done => {
+    gtran
+      .fromGeoJson(geojson, saveNameSymbol, {
+        symbol: () => pointSymbol,
+        name: "Name"
+      })
+      .then(function(file) {
+        expect(fs.statSync(saveName)).to.exist;
+        done();
+      })
+      .catch(done);
+  });
+
+  it("should load the point kml file and convert it into a geojson.", done => {
     gtran
       .toGeoJson(kmlData)
       .then(function(geojson) {
@@ -70,9 +80,9 @@ describe("KML module - Point", function() {
         // Check SimpleData tag
         expect(geojson.features[2].properties).has.property("id");
         expect(geojson.features[2].properties.id).to.be.equal(1);
+
+        done();
       })
-      .catch(function(err) {
-        logger.error(err);
-      });
+      .catch(done);
   });
 });

@@ -1,38 +1,47 @@
-var et = require("elementtree");
+const et = require("elementtree");
+const config = require("config");
 
-exports.addTo = function(kmlContent, geomType, symbol) {
+exports.addTo = function(kmlContent, geomType, symbols) {
   var kml = et.parse(kmlContent);
 
-  // Add symbol style
-  if (symbol) {
-    var style = et.SubElement(kml.find("Document"), "Style");
-    style.attrib.id = "kml_symbol";
-
-    switch (geomType) {
-      case "Point":
-        var geomStyle = et.SubElement(style, "IconStyle");
-        addPointSymbol(geomStyle, symbol);
-        break;
-      case "Polygon":
-        var geomStyle = et.SubElement(style, "PolyStyle");
-        addPolygonSymbol(geomStyle, symbol);
-        break;
-      case "LineString":
-        var geomStyle = et.SubElement(style, "LineStyle");
-        addLineStringSymbol(geomStyle, symbol);
-        break;
-      default:
-        throw new Error("Geometry type unsupported.");
-    }
+  for (const id in symbols) {
+    addSymbol(kml, geomType, symbols[id], id);
   }
 
-  kml.findall(".//Placemark").forEach(function(place) {
-    var placeStyle = et.SubElement(place, "styleUrl");
-    placeStyle.text = "#kml_symbol";
-  });
+  addFeatureSymbol(kml, geomType, symbols);
 
   return kml.write();
 };
+
+function addFeatureSymbol(kml, geomType, symbols) {
+  kml.findall(".//Placemark").forEach(place => {
+    const styleId = place.findtext(
+      `./ExtendedData/Data[@name="${config.DEFAULT_STYLE_ID}"]/value`
+    );
+    const placeStyle = et.SubElement(place, "styleUrl");
+    placeStyle.text = styleId || config.DEFAULT_STYLE_ID;
+    place.remove(`./ExtendedData/Data[@name="${config.DEFAULT_STYLE_ID}"]`);
+  });
+}
+
+function addSymbol(kml, geomType, symbol, id = "kml_symbol") {
+  const style = et.SubElement(kml.find("Document"), "Style");
+  style.attrib.id = id;
+
+  switch (geomType) {
+    case "Point":
+      addPointSymbol(et.SubElement(style, "IconStyle"), symbol);
+      break;
+    case "Polygon":
+      addPolygonSymbol(et.SubElement(style, "PolyStyle"), symbol);
+      break;
+    case "LineString":
+      addLineStringSymbol(et.SubElement(style, "LineStyle"), symbol);
+      break;
+    default:
+      throw new Error("Geometry type unsupported.");
+  }
+}
 
 function addPointSymbol(styleNode, symbol) {
   if ("color" in symbol) {

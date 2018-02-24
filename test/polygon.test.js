@@ -1,9 +1,8 @@
-var gtran = require("../src/script.js");
-var fs = require("fs");
-var logger = require("log4js").getLogger();
+const gtran = require("../src");
+const fs = require("fs");
 
-var chai = require("chai");
-var expect = chai.expect;
+const chai = require("chai");
+const expect = chai.expect;
 
 describe("KML module - Polygon", function() {
   var saveName = "test/result/test_polygon.kml";
@@ -35,21 +34,19 @@ describe("KML module - Polygon", function() {
     ]
   };
 
-  it("should save the polygon geojson as a KML file with Q.", function() {
-    gtran.setPromiseLib(require("q"));
+  it("should save the polyline geojson as a KML file.", done => {
     gtran
       .fromGeoJson(geojson, saveName, {
         symbol: polygonSymbol
       })
       .then(function(file) {
         expect(fs.statSync(saveName)).to.exist;
+        done();
       })
-      .catch(function(err) {
-        logger.error(err);
-      });
+      .catch(done);
   });
 
-  it("should load the polygon kml file and convert it into a geojson.", function() {
+  it("should load the polygon kml file and convert it into a geojson.", done => {
     gtran
       .toGeoJson(kmlData)
       .then(function(geojson) {
@@ -61,9 +58,9 @@ describe("KML module - Polygon", function() {
         expect(geojson.features[0].properties.name).to.be.equal("test");
         expect(geojson.features[0].properties).has.property("description");
         expect(geojson.features[0].properties.description).to.be.equal("test3");
+
+        done();
       })
-      .catch(function(err) {
-        logger.error(err);
-      });
+      .catch(done);
   });
 });

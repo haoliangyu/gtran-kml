@@ -1,93 +1,90 @@
 "use strict";
 
-var promiseLib = require("./promise.js");
-var symbol = require("./symbol.js");
-var tokml = require("tokml");
-var fs = require("fs");
-var et = require("elementtree");
+const util = require("util");
+const fs = require("fs");
+const tokml = require("tokml");
+const et = require("elementtree");
+const md5 = require("md5");
+const config = require("config");
 
-var Promise, readFile, writeFile;
+require("util.promisify").shim();
 
-exports.setPromiseLib = setPromiseLib;
+const symbol = require("./symbol.js");
+const readFileAsync = util.promisify(fs.readFile);
+const writeFileAsync = util.promisify(fs.writeFile);
 
-exports.toGeoJson = function(fileName, options) {
-  if (!Promise) {
-    setPromiseLib();
+// just to provide backwards compatibility
+exports.setPromiseLib = () => {};
+
+exports.toGeoJson = async (fileName, options = {}) => {
+  if (!fs.statSync(fileName)) {
+    throw new Error("Give KML file does not exist.");
   }
 
-  var promise = new Promise(function(resolve, reject) {
-    if (!fs.statSync(fileName)) {
-      reject("Give KML file does not exist.");
-    }
+  const encoding = options.encoding || "utf-8";
+  const data = await readFileAsync(fileName, encoding);
+  const etree = et.parse(data),
+    geojson = {
+      type: "FeatureCollection",
+      features: []
+    };
 
-    var hasOptions = typeof options === "object";
-
-    var encoding = "utf-8";
-    if (hasOptions && options.encoding !== undefined) {
-      encoding = options.encoding;
-    }
-
-    return readFile(fileName, encoding).then(function(data) {
-      var etree = et.parse(data),
-        geojson = {
-          type: "FeatureCollection",
-          features: []
-        };
-
-      var schemas = findSchemas(etree);
-      var placemarks = etree.findall(".//Placemark");
-      placemarks.forEach(function(placemark) {
-        geojson.features.push({
-          type: "feature",
-          geometry: getGeometry(placemark),
-          properties: getProperties(placemark, schemas)
-        });
-      });
-
-      resolve(geojson);
+  const schemas = findSchemas(etree);
+  const placemarks = etree.findall(".//Placemark");
+  placemarks.forEach(function(placemark) {
+    geojson.features.push({
+      type: "feature",
+      geometry: getGeometry(placemark),
+      properties: getProperties(placemark, schemas)
     });
   });
 
-  return promise;
+  return geojson;
 };
 
-exports.fromGeoJson = function(geojson, fileName, options) {
-  if (!Promise) {
-    setPromiseLib();
+exports.fromGeoJson = async (geojson, fileName, options = {}) => {
+  geojson = JSON.parse(JSON.stringify(geojson));
+
+  const symbols = {};
+
+  if (typeof options.symbol === "function") {
+    geojson.features.forEach(feature => {
+      const symbol = options.symbol(feature);
+      const id = md5(JSON.stringify(symbol));
+
+      if (!symbols[id]) {
+        symbols[id] = symbol;
+      }
+
+      feature.properties[config.DEFAULT_STYLE_ID] = id;
+    });
+  } else if (typeof options.symbol === "object") {
+    symbols[config.DEFAULT_STYLE_ID] = options.symbol;
   }
 
-  var promise = new Promise(function(resolve, reject) {
-    try {
-      var kmlGeoJson = JSON.parse(JSON.stringify(geojson));
-      var kmlContent = tokml(kmlGeoJson, {
-        name: options && "name" in options ? options.name : "name"
-      });
-
-      if (options && "symbol" in options) {
-        var geomType = getGeomType(kmlGeoJson);
-        kmlContent = symbol.addTo(kmlContent, geomType, options.symbol);
-      }
-
-      if (fileName) {
-        var fileNameWithExt = fileName;
-        if (fileNameWithExt.indexOf(".kml") === -1) {
-          fileNameWithExt += ".kml";
-        }
-
-        writeFile(fileNameWithExt, kmlContent);
-        resolve(fileNameWithExt);
-      } else {
-        resolve({
-          data: kmlContent,
-          format: "kml"
-        });
-      }
-    } catch (ex) {
-      reject(ex);
-    }
+  let kmlContent = tokml(geojson, {
+    name: options.name || "name"
   });
 
-  return promise;
+  if (options.symbol) {
+    const geomType = getGeomType(geojson);
+    kmlContent = symbol.addTo(kmlContent, geomType, symbols);
+  }
+
+  if (fileName) {
+    let fileNameWithExt = fileName;
+    if (fileNameWithExt.indexOf(".kml") === -1) {
+      fileNameWithExt += ".kml";
+    }
+
+    await writeFileAsync(fileNameWithExt, kmlContent);
+    return fileNameWithExt;
+  } else {
+    return {
+      data: kmlContent,
+      format: "kml"
+    };
+  }
 };
 
 function getGeomType(geojson) {
@@ -246,10 +243,4 @@ function convert(value, toType) {
     default:
       return value;
   }
-}
-
-function setPromiseLib(lib) {
-  Promise = promiseLib.set(lib);
-  readFile = promiseLib.promisify(fs.readFile);
-  writeFile = promiseLib.promisify(fs.writeFile);
 }
