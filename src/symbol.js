@@ -1,120 +1,131 @@
-var et = require('elementtree');
+const et = require("elementtree");
+const config = require("config");
 
-exports.addTo = function(kmlContent, geomType, symbol) {
-    var kml = et.parse(kmlContent);
+exports.addTo = function(kmlContent, geomType, symbols) {
+  var kml = et.parse(kmlContent);
 
-    // Add symbol style
-    if(symbol) {
-        var style = et.SubElement(kml.find('Document'), 'Style');
-        style.attrib.id = 'kml_symbol';
+  for (const id in symbols) {
+    addSymbol(kml, geomType, symbols[id], id);
+  }
 
-        switch (geomType) {
-            case 'Point':
-                var geomStyle = et.SubElement(style, 'IconStyle');
-                addPointSymbol(geomStyle, symbol);
-                break;
-            case 'Polygon':
-                var geomStyle = et.SubElement(style, 'PolyStyle');
-                addPolygonSymbol(geomStyle, symbol);
-                break;
-            case 'LineString':
-                var geomStyle = et.SubElement(style, 'LineStyle');
-                addLineStringSymbol(geomStyle, symbol);
-                break;
-            default:
-                throw new Error('Geometry type unsupported.');
-        }
-    }
+  addFeatureSymbol(kml, geomType, symbols);
 
-    kml.findall('.//Placemark').forEach(function(place) {
-        var placeStyle = et.SubElement(place, 'styleUrl')
-        placeStyle.text = '#kml_symbol';
-    });
-
-    return kml.write();
+  return kml.write();
 };
 
+function addFeatureSymbol(kml, geomType, symbols) {
+  kml.findall(".//Placemark").forEach(place => {
+    const styleId = place.findtext(
+      `./ExtendedData/Data[@name="${config.DEFAULT_STYLE_ID}"]/value`
+    );
+    const placeStyle = et.SubElement(place, "styleUrl");
+    placeStyle.text = styleId || config.DEFAULT_STYLE_ID;
+    place.remove(`./ExtendedData/Data[@name="${config.DEFAULT_STYLE_ID}"]`);
+  });
+}
+
+function addSymbol(kml, geomType, symbol, id = "kml_symbol") {
+  const style = et.SubElement(kml.find("Document"), "Style");
+  style.attrib.id = id;
+
+  switch (geomType) {
+    case "Point":
+      addPointSymbol(et.SubElement(style, "IconStyle"), symbol);
+      break;
+    case "Polygon":
+      addPolygonSymbol(et.SubElement(style, "PolyStyle"), symbol);
+      break;
+    case "LineString":
+      addLineStringSymbol(et.SubElement(style, "LineStyle"), symbol);
+      break;
+    default:
+      throw new Error("Geometry type unsupported.");
+  }
+}
+
 function addPointSymbol(styleNode, symbol) {
-    if('color' in symbol) {
-        var colorNode = et.SubElement(styleNode, 'color');
-        colorNode.text = toKmlColor(symbol);
-    }
+  if ("color" in symbol) {
+    var colorNode = et.SubElement(styleNode, "color");
+    colorNode.text = toKmlColor(symbol);
+  }
 
-    if('scale' in symbol) {
-        var scaleNode = et.SubElement(styleNode, 'scale');
-        scaleNode.text = symbol.scale.toString();
-    }
+  if ("scale" in symbol) {
+    var scaleNode = et.SubElement(styleNode, "scale");
+    scaleNode.text = symbol.scale.toString();
+  }
 
-    if('icon' in symbol) {
-        var iconNode = et.SubElement(styleNode, 'Icon');
-        var hrefNode = et.SubElement(iconNode, 'href');
-        hrefNode.text = symbol.icon;
-    }
+  if ("icon" in symbol) {
+    var iconNode = et.SubElement(styleNode, "Icon");
+    var hrefNode = et.SubElement(iconNode, "href");
+    hrefNode.text = symbol.icon;
+  }
 
-    return styleNode;
+  return styleNode;
 }
 
 function addPolygonSymbol(styleNode, symbol) {
-    if('color' in symbol) {
-        var colorNode = et.SubElement(styleNode, 'color');
-        colorNode.text = toKmlColor(symbol);
-    }
+  if ("color" in symbol) {
+    var colorNode = et.SubElement(styleNode, "color");
+    colorNode.text = toKmlColor(symbol);
+  }
 
-    if('fill' in symbol) {
-        var fillNode = et.SubElement(styleNode, 'fill');
-        fillNode.text = symbol.fill ? '1' : '0';
-    }
+  if ("fill" in symbol) {
+    var fillNode = et.SubElement(styleNode, "fill");
+    fillNode.text = symbol.fill ? "1" : "0";
+  }
 
-    if('outline' in symbol) {
-        var outlineNode = et.SubElement(styleNode, 'outline');
-        outlineNode.text = symbol.outline ? '1' : '0';
-    }
+  if ("outline" in symbol) {
+    var outlineNode = et.SubElement(styleNode, "outline");
+    outlineNode.text = symbol.outline ? "1" : "0";
+  }
 
-    return styleNode;
+  return styleNode;
 }
 
 function addLineStringSymbol(styleNode, symbol) {
-    if('color' in symbol) {
-        var colorNode = et.SubElement(styleNode, 'color');
-        colorNode.text = toKmlColor(symbol);
-    }
+  if ("color" in symbol) {
+    var colorNode = et.SubElement(styleNode, "color");
+    colorNode.text = toKmlColor(symbol);
+  }
 
-    if('width' in symbol) {
-        var widthNode = et.SubElement(styleNode, 'width');
-        widthNode.text = symbol.width.toString();
-    }
+  if ("width" in symbol) {
+    var widthNode = et.SubElement(styleNode, "width");
+    widthNode.text = symbol.width.toString();
+  }
 
-    return styleNode;
+  return styleNode;
 }
 
 function toKmlColor(symbol) {
-    switch (typeof symbol.color) {
-        case 'string':
-            if (symbol.color.length === 4) {
-                symbol.color = symbol.color.slice(0, 1) + "0" + symbol.color.slice(1);
-                symbol.color = symbol.color.slice(0, 3) + "0" + symbol.color.slice(2);
-                symbol.color = symbol.color.slice(0, 5) + "0" + symbol.color.slice(3);
-            }
-            var color = symbol.color.substr(5, 2) +
-                        symbol.color.substr(3, 2) +
-                        symbol.color.substr(1, 2);
-            break;
-        case 'object':
-            var color = getFullHexagonValue(symbol.color[2]) +
-                        getFullHexagonValue(symbol.color[1]) +
-                        getFullHexagonValue(symbol.color[0]);
+  switch (typeof symbol.color) {
+    case "string":
+      if (symbol.color.length === 4) {
+        symbol.color = symbol.color.slice(0, 1) + "0" + symbol.color.slice(1);
+        symbol.color = symbol.color.slice(0, 3) + "0" + symbol.color.slice(2);
+        symbol.color = symbol.color.slice(0, 5) + "0" + symbol.color.slice(3);
+      }
+      var color =
+        symbol.color.substr(5, 2) +
+        symbol.color.substr(3, 2) +
+        symbol.color.substr(1, 2);
+      break;
+    case "object":
+      var color =
+        getFullHexagonValue(symbol.color[2]) +
+        getFullHexagonValue(symbol.color[1]) +
+        getFullHexagonValue(symbol.color[0]);
 
-            break;
-        default:
-            throw new Error('Given color is invalid.');
-    }
+      break;
+    default:
+      throw new Error("Given color is invalid.");
+  }
 
-    color = 'alpha' in symbol ? symbol.alpha.toString(16) + color : 'ff' + color;
+  color = "alpha" in symbol ? symbol.alpha.toString(16) + color : "ff" + color;
 
-    return color;
+  return color;
 }
 
 function getFullHexagonValue(integer) {
   var str = integer.toString(16);
-  return str.length < 2 ? '0' + str : str;
+  return str.length < 2 ? "0" + str : str;
 }
