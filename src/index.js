@@ -1,5 +1,7 @@
 "use strict";
 
+require("babel-polyfill");
+
 const util = require("util");
 const fs = require("fs");
 const tokml = require("tokml");

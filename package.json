@@ -1,11 +1,11 @@
 {
   "name": "gtran-kml",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "convert geojson to kml file and backwards",
   "main": "dist/index.js",
   "scripts": {
     "build": "babel src --out-dir dist",
-    "test": "mocha",
+    "test": "npm run build && mocha",
     "precommit": "lint-staged",
     "prepublish": "npm test && npm run build"
   },
@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/haoliangyu/gtran-kml#readme",
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "config": "^1.29.4",
     "elementtree": "^0.1.7",
     "md5": "^2.2.1",
