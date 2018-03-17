@@ -1,4 +1,4 @@
-const gtran = require("../src");
+const gtran = require("../dist");
 const fs = require("fs");
 
 const chai = require("chai");
