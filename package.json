@@ -1,6 +1,6 @@
 {
   "name": "gtran-kml",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "convert geojson to kml file and backwards",
   "main": "dist/index.js",
   "scripts": {
@@ -13,7 +13,11 @@
     "type": "git",
     "url": "git+https://github.com/haoliangyu/gtran-kml.git"
   },
-  "keywords": ["geojson", "kml"],
+  "keywords": [
+    "geojson",
+    "kml",
+    "conversion"
+  ],
   "author": "Haoliang Yu <haholiang.yu@outlook.com>",
   "license": "MIT",
   "bugs": {
@@ -22,22 +26,25 @@
   "homepage": "https://github.com/haoliangyu/gtran-kml#readme",
   "dependencies": {
     "babel-polyfill": "^6.26.0",
-    "config": "^1.29.4",
+    "config": "^3.0.0",
     "elementtree": "^0.1.7",
     "md5": "^2.2.1",
     "tokml": "^0.4.0",
     "util.promisify": "^1.0.0"
   },
   "lint-staged": {
-    "*.{js,json,md}": ["prettier --write", "git add"]
+    "*.{js,json,md}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "chai": "^4.1.2",
-    "husky": "^0.14.3",
-    "lint-staged": "^7.0.0",
-    "mocha": "^5.0.1",
-    "prettier": "^1.10.2"
+    "babel-preset-env": "^1.7.0",
+    "chai": "^4.2.0",
+    "husky": "^1.2.0",
+    "lint-staged": "^8.1.0",
+    "mocha": "^5.2.0",
+    "prettier": "^1.15.3"
   }
 }
