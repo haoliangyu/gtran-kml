@@ -1,6 +1,6 @@
 # gtran-kml
 
-[![Build Status](https://travis-ci.org/haoliangyu/gtran-kml.svg?branch=master)](https://travis-ci.org/haoliangyu/gtran-kml)
+[![npm](https://img.shields.io/npm/v/gtran-kml.svg)](https://www.npmjs.com/package/gtran-kml) [![Build Status](https://travis-ci.org/haoliangyu/gtran-kml.svg?branch=master)](https://travis-ci.org/haoliangyu/gtran-kml)
 
 Convert geojson to kml file and backwards.
 
@@ -14,7 +14,7 @@ npm install gtran-kml
 
 ## Functions
 
-* **fromGeoJson(geojson, fileName, options)**
+- **fromGeoJson(geojson, fileName, options)**
 
   Save the geojson into the given file name.
 
@@ -22,43 +22,43 @@ npm install gtran-kml
 
   options:
 
-  * name - Specify the feature name using a geojson property. The Default value is **'name'**.
+  - name - Specify the feature name using a geojson property. The Default value is **'name'**.
 
-  * symbol - Specify feature Symbol. It accepts an symbol object or a function to return the symbol per feature.
+  - symbol - Specify feature Symbol. It accepts an symbol object or a function to return the symbol per feature.
 
     Supported styles:
 
-    * Point
+    - Point
 
-      * color - HTML color code or array of RGB values, indicating feature color.
+      - color - HTML color code or array of RGB values, indicating feature color.
 
-      * alpha - An integer value (0-255), indicating the color opacity
+      - alpha - An integer value (0-255), indicating the color opacity
 
-      * scale - Feature size, a float number.
+      - scale - Feature size, a float number.
 
-      * icon - Link of feature icons. Some generally used icons can be found [here](http://kml4earth.appspot.com/icons.html).
+      - icon - Link of feature icons. Some generally used icons can be found [here](http://kml4earth.appspot.com/icons.html).
 
-    * LineString
+    - LineString
 
-      * color - HTML color code or array of RGB values, indicating feature color.
+      - color - HTML color code or array of RGB values, indicating feature color.
 
-      * alpha - An integer value (0-255), indicating the color opacity
+      - alpha - An integer value (0-255), indicating the color opacity
 
-      * width - A float value, indicating line width.
+      - width - A float value, indicating line width.
 
-    * Polygon
+    - Polygon
 
-      * color - HTML color code or array of RGB values, indicating feature color.
+      - color - HTML color code or array of RGB values, indicating feature color.
 
-      * alpha - An integer value (0-255), indicating the color opacity
+      - alpha - An integer value (0-255), indicating the color opacity
 
-      * fill - A boolean value, indicating whether to fill the polygon.
+      - fill - A boolean value, indicating whether to fill the polygon.
 
-      * outline - A boolean value, indicating whether to outline the polygon.
+      - outline - A boolean value, indicating whether to outline the polygon.
 
   See the detail explaination at [KML format reference](https://developers.google.com/kml/documentation/kmlreference).
 
-* **toGeoJson(fileName)**
+- **toGeoJson(fileName)**
 
   Read the given file into geojson.
 
