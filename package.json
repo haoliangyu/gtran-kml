@@ -1,6 +1,6 @@
 {
   "name": "gtran-kml",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "convert geojson to kml file and backwards",
   "main": "src/index.js",
   "scripts": {
