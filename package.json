@@ -2,12 +2,10 @@
   "name": "gtran-kml",
   "version": "1.2.2",
   "description": "convert geojson to kml file and backwards",
-  "main": "dist/index.js",
+  "main": "src/index.js",
   "scripts": {
-    "build": "babel src --out-dir dist",
-    "test": "npm run build && mocha",
-    "precommit": "lint-staged",
-    "prepublish": "npm test && npm run build"
+    "test": "mocha",
+    "precommit": "lint-staged && npm test"
   },
   "repository": {
     "type": "git",
@@ -25,12 +23,9 @@
   },
   "homepage": "https://github.com/haoliangyu/gtran-kml#readme",
   "dependencies": {
-    "babel-polyfill": "^6.26.0",
-    "config": "^3.0.0",
+    "config": "^3.1.0",
     "elementtree": "^0.1.7",
-    "md5": "^2.2.1",
-    "tokml": "^0.4.0",
-    "util.promisify": "^1.0.0"
+    "tokml": "^0.4.0"
   },
   "lint-staged": {
     "*.{js,json,md}": [
@@ -39,12 +34,10 @@
     ]
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
     "chai": "^4.2.0",
-    "husky": "^1.2.0",
-    "lint-staged": "^8.1.0",
-    "mocha": "^5.2.0",
-    "prettier": "^1.15.3"
+    "husky": "^2.4.1",
+    "lint-staged": "^8.2.0",
+    "mocha": "^6.1.4",
+    "prettier": "^1.18.2"
   }
 }

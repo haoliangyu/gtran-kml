@@ -1,15 +1,11 @@
 "use strict";
 
-require("babel-polyfill");
-
 const util = require("util");
 const fs = require("fs");
 const tokml = require("tokml");
 const et = require("elementtree");
-const md5 = require("md5");
+const md5 = require("./md5");
 const config = require("config");
-
-require("util.promisify").shim();
 
 const symbol = require("./symbol.js");
 const readFileAsync = util.promisify(fs.readFile);
