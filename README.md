@@ -22,6 +22,10 @@ npm install gtran-kml
 
   options:
 
+  - documentName - Specify the name of the full document. The Default value is **'My KML'**.
+
+  - documentDescription - Specify the description of the full document. The Default value is **'Converted from GeoJson by gtran-kml'**.
+
   - name - Specify the feature name using a geojson property. The Default value is **'name'**.
 
   - symbol - Specify feature Symbol. It accepts an symbol object or a function to return the symbol per feature.
