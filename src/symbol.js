@@ -19,7 +19,7 @@ function addFeatureSymbol(kml, geomType, symbols) {
       `./ExtendedData/Data[@name="${config.DEFAULT_STYLE_ID}"]/value`
     );
     const placeStyle = et.SubElement(place, "styleUrl");
-    placeStyle.text = styleId || config.DEFAULT_STYLE_ID;
+    placeStyle.text = '#' + (styleId || config.DEFAULT_STYLE_ID);
     place.remove(`./ExtendedData/Data[@name="${config.DEFAULT_STYLE_ID}"]`);
   });
 }
