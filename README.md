@@ -28,6 +28,8 @@ npm install gtran-kml
 
   - name - Specify the feature name using a geojson property. The Default value is **'name'**.
 
+  - featureStyleKey - Specify the xml style key in the xml feature properties.
+
   - symbol - Specify feature Symbol. It accepts an symbol object or a function to return the symbol per feature.
 
     Supported styles:

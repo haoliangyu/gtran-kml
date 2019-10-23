@@ -1,26 +1,25 @@
 const et = require("elementtree");
-const config = require("config");
 
-exports.addTo = function(kmlContent, symbols) {
+exports.addTo = function (kmlContent, symbols, featureStyleKey) {
   var kml = et.parse(kmlContent);
 
   for (const id in symbols) {
     addSymbol(kml, symbols[id].geomType, symbols[id].symbol, id);
   }
 
-  addFeatureSymbol(kml);
+  addFeatureSymbol(kml, featureStyleKey);
 
   return kml.write();
 };
 
-function addFeatureSymbol(kml) {
+function addFeatureSymbol(kml, featureStyleKey) {
   kml.findall(".//Placemark").forEach(place => {
     const styleId = place.findtext(
-      `./ExtendedData/Data[@name="${config.DEFAULT_STYLE_ID}"]/value`
+      `./ExtendedData/Data[@name="${featureStyleKey}"]/value`
     );
     const placeStyle = et.SubElement(place, "styleUrl");
-    placeStyle.text = '#' + (styleId || config.DEFAULT_STYLE_ID);
-    place.remove(`./ExtendedData/Data[@name="${config.DEFAULT_STYLE_ID}"]`);
+    placeStyle.text = '#' + (styleId || featureStyleKey);
+    place.remove(`./ExtendedData/Data[@name="${featureStyleKey}"]`);
   });
 }
 

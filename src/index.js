@@ -1,13 +1,10 @@
-"use strict";
-
 const util = require("util");
 const fs = require("fs");
 const tokml = require("tokml");
 const et = require("elementtree");
 const md5 = require("./md5");
-const config = require("config");
-
 const symbol = require("./symbol.js");
+
 const readFileAsync = util.promisify(fs.readFile);
 const writeFileAsync = util.promisify(fs.writeFile);
 
@@ -44,6 +41,7 @@ exports.fromGeoJson = async (geojson, fileName, options = {}) => {
   geojson = JSON.parse(JSON.stringify(geojson));
 
   const symbols = {};
+  const featureStyleKey = options.featureStyleKey || 'gtran-kml-style-id';
 
   geojson.features.forEach(feature => {
     const symbol = {
@@ -56,7 +54,7 @@ exports.fromGeoJson = async (geojson, fileName, options = {}) => {
       symbols[id] = symbol;
     }
 
-    feature.properties[config.DEFAULT_STYLE_ID] = id;
+    feature.properties[featureStyleKey] = id;
   });
 
   let kmlContent = tokml(geojson, {
@@ -66,7 +64,7 @@ exports.fromGeoJson = async (geojson, fileName, options = {}) => {
   });
 
   if (options.symbol) {
-    kmlContent = symbol.addTo(kmlContent, symbols);
+    kmlContent = symbol.addTo(kmlContent, symbols, featureStyleKey);
   }
 
   if (fileName) {

@@ -25,7 +25,6 @@
   },
   "homepage": "https://github.com/haoliangyu/gtran-kml#readme",
   "dependencies": {
-    "config": "^3.2.3",
     "elementtree": "^0.1.7",
     "tokml": "^0.4.0"
   },
