@@ -1,19 +1,19 @@
 const et = require("elementtree");
 const config = require("config");
 
-exports.addTo = function(kmlContent, geomType, symbols) {
+exports.addTo = function(kmlContent, symbols) {
   var kml = et.parse(kmlContent);
 
   for (const id in symbols) {
-    addSymbol(kml, geomType, symbols[id], id);
+    addSymbol(kml, symbols[id].geomType, symbols[id].symbol, id);
   }
 
-  addFeatureSymbol(kml, geomType, symbols);
+  addFeatureSymbol(kml);
 
   return kml.write();
 };
 
-function addFeatureSymbol(kml, geomType, symbols) {
+function addFeatureSymbol(kml) {
   kml.findall(".//Placemark").forEach(place => {
     const styleId = place.findtext(
       `./ExtendedData/Data[@name="${config.DEFAULT_STYLE_ID}"]/value`

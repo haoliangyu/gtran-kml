@@ -45,20 +45,19 @@ exports.fromGeoJson = async (geojson, fileName, options = {}) => {
 
   const symbols = {};
 
-  if (typeof options.symbol === "function") {
-    geojson.features.forEach(feature => {
-      const symbol = options.symbol(feature);
-      const id = md5(JSON.stringify(symbol));
+  geojson.features.forEach(feature => {
+    const symbol = {
+      geomType: feature.geometry.type,
+      symbol: typeof options.symbol === "function" ? options.symbol(feature) : options.symbol
+    };
+    const id = md5(JSON.stringify(symbol));
 
-      if (!symbols[id]) {
-        symbols[id] = symbol;
-      }
+    if (!symbols[id]) {
+      symbols[id] = symbol;
+    }
 
-      feature.properties[config.DEFAULT_STYLE_ID] = id;
-    });
-  } else if (typeof options.symbol === "object") {
-    symbols[config.DEFAULT_STYLE_ID] = options.symbol;
-  }
+    feature.properties[config.DEFAULT_STYLE_ID] = id;
+  });
 
   let kmlContent = tokml(geojson, {
     name: options.name || "name",
@@ -67,8 +66,7 @@ exports.fromGeoJson = async (geojson, fileName, options = {}) => {
   });
 
   if (options.symbol) {
-    const geomType = getGeomType(geojson);
-    kmlContent = symbol.addTo(kmlContent, geomType, symbols);
+    kmlContent = symbol.addTo(kmlContent, symbols);
   }
 
   if (fileName) {
@@ -86,18 +84,6 @@ exports.fromGeoJson = async (geojson, fileName, options = {}) => {
     };
   }
 };
-
-function getGeomType(geojson) {
-  // Assume there is only one geometry type in the geojson
-  switch (geojson.features[0].geometry.type) {
-    case "Point":
-    case "Polygon":
-    case "LineString":
-      return geojson.features[0].geometry.type;
-    default:
-      throw new Error("Geometry type unsupported.");
-  }
-}
 
 function getGeometry(placemark) {
   var geomTag = placemark.find("./Point");
