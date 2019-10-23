@@ -61,7 +61,9 @@ exports.fromGeoJson = async (geojson, fileName, options = {}) => {
   }
 
   let kmlContent = tokml(geojson, {
-    name: options.name || "name"
+    name: options.name || "name",
+    documentName: options.documentName || 'My KML',
+    documentDescription: options.documentDescription || "Converted from GeoJson by gtran-kml"
   });
 
   if (options.symbol) {
