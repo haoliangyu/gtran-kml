@@ -4,8 +4,7 @@
   "description": "convert geojson to kml file and backwards",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha",
-    "precommit": "lint-staged && npm test"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -30,17 +29,22 @@
     "elementtree": "^0.1.7",
     "tokml": "^0.4.0"
   },
-  "lint-staged": {
-    "*.js": [
-      "prettier --write",
-      "git add"
-    ]
-  },
   "devDependencies": {
     "chai": "^4.2.0",
     "husky": "^3.0.9",
     "lint-staged": "^9.4.2",
     "mocha": "^6.2.2",
     "prettier": "^1.18.2"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "huksy": {
+    "hooks": {
+      "pre-commit": "lint-staged && npm test"
+    }
   }
 }
