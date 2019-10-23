@@ -14,7 +14,10 @@
   "keywords": [
     "geojson",
     "kml",
-    "conversion"
+    "kmz",
+    "format",
+    "conversion",
+    "style"
   ],
   "author": "Haoliang Yu <haholiang.yu@outlook.com>",
   "license": "MIT",
@@ -23,21 +26,21 @@
   },
   "homepage": "https://github.com/haoliangyu/gtran-kml#readme",
   "dependencies": {
-    "config": "^3.1.0",
+    "config": "^3.2.3",
     "elementtree": "^0.1.7",
     "tokml": "^0.4.0"
   },
   "lint-staged": {
-    "*.{js,json,md}": [
+    "*.js": [
       "prettier --write",
       "git add"
     ]
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "husky": "^2.4.1",
-    "lint-staged": "^8.2.0",
-    "mocha": "^6.1.4",
+    "husky": "^3.0.9",
+    "lint-staged": "^9.4.2",
+    "mocha": "^6.2.2",
     "prettier": "^1.18.2"
   }
 }
