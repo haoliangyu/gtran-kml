@@ -19,7 +19,13 @@ function addFeatureSymbol(kml, featureStyleKey) {
     );
     const placeStyle = et.SubElement(place, "styleUrl");
     placeStyle.text = '#' + (styleId || featureStyleKey);
-    place.remove(`./ExtendedData/Data[@name="${featureStyleKey}"]`);
+
+    // Clean up ExtendedData styleId.
+    let extendedData = place.find('./ExtendedData');
+    extendedData.remove(extendedData.find(`./Data[@name="${featureStyleKey}"]`));
+    if (extendedData.findall('./*').length === 0) {
+      place.remove(extendedData);
+    }
   });
 }
 
