@@ -1,6 +1,6 @@
 const util = require("util");
 const fs = require("fs");
-const tokml = require("tokml");
+const tokml = require("@maphubs/tokml");
 const et = require("elementtree");
 const md5 = require("./md5");
 const symbol = require("./symbol.js");
@@ -21,16 +21,16 @@ exports.toGeoJson = async (fileName, options = {}) => {
   const etree = et.parse(data),
     geojson = {
       type: "FeatureCollection",
-      features: []
+      features: [],
     };
 
   const schemas = findSchemas(etree);
   const placemarks = etree.findall(".//Placemark");
-  placemarks.forEach(function(placemark) {
+  placemarks.forEach(function (placemark) {
     geojson.features.push({
       type: "feature",
       geometry: getGeometry(placemark),
-      properties: getProperties(placemark, schemas)
+      properties: getProperties(placemark, schemas),
     });
   });
 
@@ -41,12 +41,15 @@ exports.fromGeoJson = async (geojson, fileName, options = {}) => {
   geojson = JSON.parse(JSON.stringify(geojson));
 
   const symbols = {};
-  const featureStyleKey = options.featureStyleKey || 'gtran-kml-style-id';
+  const featureStyleKey = options.featureStyleKey || "gtran-kml-style-id";
 
-  geojson.features.forEach(feature => {
+  geojson.features.forEach((feature) => {
     const symbol = {
       geomType: feature.geometry.type,
-      symbol: typeof options.symbol === "function" ? options.symbol(feature) : options.symbol
+      symbol:
+        typeof options.symbol === "function"
+          ? options.symbol(feature)
+          : options.symbol,
     };
     const id = md5(JSON.stringify(symbol));
 
@@ -59,8 +62,9 @@ exports.fromGeoJson = async (geojson, fileName, options = {}) => {
 
   let kmlContent = tokml(geojson, {
     name: options.name || "name",
-    documentName: options.documentName || 'My KML',
-    documentDescription: options.documentDescription || "Converted from GeoJson by gtran-kml"
+    documentName: options.documentName || "My KML",
+    documentDescription:
+      options.documentDescription || "Converted from GeoJson by gtran-kml",
   });
 
   if (options.symbol) {
@@ -78,7 +82,7 @@ exports.fromGeoJson = async (geojson, fileName, options = {}) => {
   } else {
     return {
       data: kmlContent,
-      format: "kml"
+      format: "kml",
     };
   }
 };
@@ -103,7 +107,7 @@ function getGeometry(placemark) {
     var inRingsCoors = [];
     geomTag
       .findall("./innerBoundaryIs/LinearRing/coordinates")
-      .forEach(function(node) {
+      .forEach(function (node) {
         inRingsCoors.push(node.text);
       });
 
@@ -114,7 +118,7 @@ function getGeometry(placemark) {
 function createGeometry(geomType, outerCoorStr, innerCoorStr) {
   return {
     type: geomType,
-    coordinates: getCoordinates(outerCoorStr, innerCoorStr)
+    coordinates: getCoordinates(outerCoorStr, innerCoorStr),
   };
 }
 
@@ -126,7 +130,7 @@ function getCoordinates(outCoorsdStr, inCoordsStrs) {
     return [parseFloat(coors[0]), parseFloat(coors[1])];
   } else {
     var outPoints = [];
-    pointStrs.forEach(function(pointStr) {
+    pointStrs.forEach(function (pointStr) {
       var coors = pointStr.split(",");
       outPoints.push([parseFloat(coors[0]), parseFloat(coors[1])]);
     });
@@ -136,11 +140,11 @@ function getCoordinates(outCoorsdStr, inCoordsStrs) {
     }
 
     var allPoints = [outPoints];
-    inCoordsStrs.forEach(function(coordsStr) {
+    inCoordsStrs.forEach(function (coordsStr) {
       var inPoints = [],
         pointStrs = coordsStr.split(" ");
 
-      pointStrs.forEach(function(coordsStr) {
+      pointStrs.forEach(function (coordsStr) {
         var coors = coordsStr.split(",");
         inPoints.push([parseFloat(coors[0]), parseFloat(coors[1])]);
       });
@@ -158,11 +162,11 @@ function findSchemas(rootnode) {
   // considering if we have more than one schema
   if (schemaNodes.length > 0) {
     var schemas = {};
-    schemaNodes.forEach(function(schemaNode) {
+    schemaNodes.forEach(function (schemaNode) {
       var schema = {};
 
       // get the type of field
-      schemaNode.findall("./SimpleField").forEach(function(fieldNode) {
+      schemaNode.findall("./SimpleField").forEach(function (fieldNode) {
         schema[fieldNode.attrib.name] = fieldNode.attrib.type;
       });
 
@@ -191,10 +195,10 @@ function getProperties(placemark, schemas) {
   // schema data
   if (schemas) {
     var schemaDatasets = placemark.findall("./ExtendedData/SchemaData");
-    schemaDatasets.forEach(function(schemaDataset) {
+    schemaDatasets.forEach(function (schemaDataset) {
       var schema = schemas[schemaDataset.attrib.schemaUrl.replace("#", "")],
         fields = schemaDataset.findall("./SimpleData");
-      fields.forEach(function(field) {
+      fields.forEach(function (field) {
         properties[field.attrib.name] = convert(
           field.text,
           schema[field.attrib.name]
@@ -205,7 +209,7 @@ function getProperties(placemark, schemas) {
 
   // simple data
   var fields = placemark.findall("./ExtendedData/Data");
-  fields.forEach(function(field) {
+  fields.forEach(function (field) {
     properties[field.attrib.name] = field.findtext("./value");
   });
 

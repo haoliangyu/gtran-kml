@@ -26,13 +26,13 @@
   "homepage": "https://github.com/haoliangyu/gtran-kml#readme",
   "dependencies": {
     "elementtree": "^0.1.7",
-    "tokml": "^0.4.0"
+    "@maphubs/tokml": "^0.5.2"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.6",
-    "mocha": "^7.2.0",
+    "mocha": "^8.1.1",
     "prettier": "^2.0.5"
   },
   "lint-staged": {
