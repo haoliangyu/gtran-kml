@@ -64,6 +64,8 @@ npm install gtran-kml
 
   See the detail explaination at [KML format reference](https://developers.google.com/kml/documentation/kmlreference).
 
+  - pretty - Pretty print the output KML. The default value is **false**.
+
 - **toGeoJson(fileName)**
 
   Read the given file into geojson.
