@@ -1,6 +1,6 @@
 const util = require("util");
 const fs = require("fs");
-const tokml = require("tokml");
+const tokml = require("@maphubs/tokml");
 const et = require("elementtree");
 const md5 = require("./md5");
 const symbol = require("./symbol.js");
